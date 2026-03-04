@@ -1,0 +1,12 @@
+### GET確認
+GET http://localhost:3000/users
+
+###
+
+### POST追加
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "ichiro"
+}
