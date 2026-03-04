@@ -194,6 +194,7 @@ trim / maxLength でフロント入力チェック
 
 ## 11. POST → GET 流れ（ASCII 図）
 
+```
 クライアント (ブラウザ / Postman)</br>
 |</br>
 | POST /users { "name": "saburo" }</br>
@@ -235,5 +236,6 @@ v</br>
 v</br>
 クライアント ← [{ "id": 1, "name": "saburo" }]</br>
 </br>
+```
 
 ---
