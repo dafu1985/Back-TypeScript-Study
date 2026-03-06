@@ -2,15 +2,15 @@ import prisma from "../../utils/prisma";
 
 // ユーザー一覧取得
 export const fetchUsers = async () => {
-  return prisma.user.findMany();
+  return prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      // password は含めない
+    },
+  });
 };
-
-// ユーザー追加
-export const createUser = async (name: string) => {
-  return prisma.user.create({
-    data: { name },
-  }); 
-  };
 
 export const updateUser = async (id: number, name: string) =>{
   return prisma.user.update({
