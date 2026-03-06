@@ -239,3 +239,149 @@ v</br>
 ```
 
 ---
+
+# 2026/03/06 CRUD + Prisma 導入まとめ
+
+## 1. 今日やったこと
+
+- PATCH / DELETE を追加して CRUD を完成
+- インメモリ配列 → Prisma + SQLite に差し替え
+
+---
+
+## 2. CRUD 完成（Router）
+
+```typescript
+router.get("/", asyncHandler(getUsers));
+router.post("/", validate(createUserSchema), asyncHandler(createUser));
+router.patch("/:id", validate(updateUserSchema), asyncHandler(updateUser));
+router.delete("/:id", asyncHandler(deleteUser));
+```
+
+---
+
+## 3. Prisma 導入手順
+
+```bash
+npm install prisma --save-dev
+npm install @prisma/client
+npx prisma init --datasource-provider sqlite
+npm install @prisma/adapter-better-sqlite3
+npm install better-sqlite3
+npm install --save-dev @types/better-sqlite3
+```
+
+---
+
+## 4. schema.prisma
+
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+```
+
+---
+
+## 5. prisma.config.ts
+
+```typescript
+import "dotenv/config";
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  datasource: {
+    url: process.env["DATABASE_URL"],
+  },
+});
+```
+
+---
+
+## 6. .env
+
+```
+DATABASE_URL="file:./prisma/dev.db"
+```
+
+---
+
+## 7. src/utils/prisma.ts
+
+```typescript
+import { PrismaClient } from "@prisma/client";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+
+const adapter = new PrismaBetterSqlite3({
+  url: process.env.DATABASE_URL || "file:./prisma/dev.db",
+});
+
+const prisma = new PrismaClient({ adapter });
+
+export default prisma;
+```
+
+---
+
+## 8. user.service.ts（Prisma版）
+
+```typescript
+import prisma from "../../utils/prisma";
+
+export const fetchUsers = async () => {
+  return prisma.user.findMany();
+};
+
+export const createUser = async (name: string) => {
+  return prisma.user.create({
+    data: { name },
+  });
+};
+
+export const updateUser = async (id: number, name: string) => {
+  return prisma.user.update({
+    data: { name: name.trim() },
+    where: { id },
+  });
+};
+
+export const deleteUser = async (id: number) => {
+  return prisma.user.delete({
+    where: { id },
+  });
+};
+```
+
+---
+
+## 9. インメモリ配列との比較
+
+| 以前（インメモリ）         | Prisma                   |
+| -------------------------- | ------------------------ |
+| `const users: User[] = []` | 不要                     |
+| `users.find()`             | `prisma.user.findMany()` |
+| `users.push()`             | `prisma.user.create()`   |
+| `user.name = name.trim()`  | `prisma.user.update()`   |
+| `users.splice()`           | `prisma.user.delete()`   |
+| 再起動でデータ消える       | DBに永続化される ✅      |
+
+---
+
+## 10. Prisma 7系の注意点
+
+- `new PrismaClient()` だけでは起動しない
+- Driver Adapter（`@prisma/adapter-better-sqlite3`）が必須
+- `schema.prisma` に `url` を書かず `prisma.config.ts` で管理する

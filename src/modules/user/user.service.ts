@@ -1,24 +1,30 @@
-// src/modules/user/user.service.ts
-interface User {
-  id: number;
-  name: string;
-}
-
-const users: User[] = [];
+import prisma from "../../utils/prisma";
 
 // ユーザー一覧取得
-export const fetchUsers = async (): Promise<User[]> => {
-  return users;
+export const fetchUsers = async () => {
+  return prisma.user.findMany();
 };
 
 // ユーザー追加
-export const createUser = async (name: string): Promise<User> => {
-  const trimmedName = name.trim(); // 空白除去
+export const createUser = async (name: string) => {
+  return prisma.user.create({
+    data: { name },
+  }); 
+  };
 
-  // id は配列長 + 1
-  const id = users.length + 1;
+export const updateUser = async (id: number, name: string) =>{
+  return prisma.user.update({
+    data: { name: name.trim(),},
+    where: {
+      id: id,
+    },
+  });
+};
 
-  const newUser: User = { id, name: trimmedName };
-  users.push(newUser);
-  return newUser;
+export const deleteUser = async (id: number) => {
+  return prisma.user.delete({
+    where: {
+      id: id,
+    },
+  });
 };

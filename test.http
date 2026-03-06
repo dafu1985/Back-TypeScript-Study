@@ -7,6 +7,19 @@ GET http://localhost:3000/users
 POST http://localhost:3000/users
 Content-Type: application/json
 
-{
-  "name": "ichiro"
-}
+{ "name": "saburo" }
+
+### GET確認
+GET http://localhost:3000/users
+
+### PATCH更新
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{ "name": "jiro" }
+
+### DELETE削除
+DELETE http://localhost:3000/users/1
+
+### GET確認
+GET http://localhost:3000/users
