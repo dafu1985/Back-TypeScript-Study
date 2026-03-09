@@ -44,3 +44,40 @@ Content-Type: application/json
   "email": "saburo@example.com",
   "password": "password123"
 }
+
+
+##
+
+### 1. トークンなしでGET（401になるはず）
+GET http://localhost:3000/users
+
+### 2. ログインしてトークン取得
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "saburo@example.com",
+  "password": "password123"
+}
+
+### 3. トークンありでGET（200になるはず）
+GET http://localhost:3000/users
+Authorization: Bearer ここにトークンを貼る
+
+
+### 存在しないidにPATCH（404になるはず）
+PATCH http://localhost:3000/users/999
+Authorization: Bearer トークンを貼る
+Content-Type: application/json
+
+{ "name": "test" }
+
+### 同じemailで登録（409になるはず）
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "saburo2",
+  "email": "saburo@example.com",
+  "password": "password123"
+}
