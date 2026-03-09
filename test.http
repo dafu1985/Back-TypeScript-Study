@@ -67,7 +67,7 @@ Authorization: Bearer ここにトークンを貼る
 
 ### 存在しないidにPATCH（404になるはず）
 PATCH http://localhost:3000/users/999
-Authorization: Bearer トークンを貼る
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc3MzAxNzE1NCwiZXhwIjoxNzczMTAzNTU0fQ.HnHnqepzoW4t1t870rQxKaxi0TMbXfcHLw1drWTRGI4
 Content-Type: application/json
 
 { "name": "test" }

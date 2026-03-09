@@ -1,8 +1,6 @@
 // src/modules/user/user.controller.ts
 import { Request, Response } from "express";
-import { fetchUsers, createUser as createUserService, updateUser as updateUserService, deleteUser as deleteUserService } from "./user.service";
-import { createUserSchema } from "./user.schema";
-import { AppError } from "../../utils/AppError";
+import { fetchUsers, updateUser as updateUserService, deleteUser as deleteUserService } from "./user.service";
 
 // GET /users
 export const getUsers = async (req: Request, res: Response) => {
@@ -11,17 +9,6 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 // POST /users
-export const createUser = async (req: Request, res: Response) => {
-  const result = createUserSchema.safeParse(req.body);
-
-  if (!result.success) {
-    throw new AppError(result.error.issues.map((i) => i.message).join(", "), 400);
-  }
-
-  const newUser = await createUserService(result.data.name);
-  res.status(201).json(newUser);
-};
-
 export const updateUser = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
 
