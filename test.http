@@ -81,3 +81,29 @@ Content-Type: application/json
   "email": "saburo@example.com",
   "password": "password123"
 }
+
+### ログイン（accessToken + refreshToken が返るか確認）
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "saburo@example.com",
+  "password": "password123"
+}
+
+### トークンリフレッシュ
+POST http://localhost:3000/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc3MzI4MDU2NCwiZXhwIjoxNzczODg1MzY0fQ.r5eeUqrTPUQzMLx2iSZIvypsab_HrSeHwFOoz6AQH30"
+}
+
+### ログアウト
+POST http://localhost:3000/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc3MzI4MDU2NCwiZXhwIjoxNzczMjgxNDY0fQ.VsmMFNA_P_4ED2SCe8RD-b716kTM6-G3m24rR4itm2I
+
+
+### ユーザー詳細取得
+GET http://localhost:3000/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc3MzMwMDQ3OCwiZXhwIjoxNzczMzAxMzc4fQ.BmnpoRPYt0PRvi0hhmYt4SkKYhdtKgNhBM1_JjM8BNY

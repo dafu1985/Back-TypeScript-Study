@@ -1,11 +1,17 @@
 // src/modules/user/user.controller.ts
 import { Request, Response } from "express";
-import { fetchUsers, updateUser as updateUserService, deleteUser as deleteUserService } from "./user.service";
+import { fetchUsers, updateUser as updateUserService, deleteUser as deleteUserService, fetchUser } from "./user.service";
 
 // GET /users
 export const getUsers = async (req: Request, res: Response) => {
   const users = await fetchUsers();
   res.status(200).json(users);
+};
+
+export const getUser = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const user = await fetchUser(id);
+  res.status(200).json(user);
 };
 
 // POST /users

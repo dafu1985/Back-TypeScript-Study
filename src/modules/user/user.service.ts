@@ -1,4 +1,6 @@
 import prisma from "../../utils/prisma";
+import { AppError } from "../../utils/AppError";
+
 
 // ユーザー一覧取得
 export const fetchUsers = async () => {
@@ -10,6 +12,26 @@ export const fetchUsers = async () => {
       // password は含めない
     },
   });
+};
+
+export const fetchUser = async (id: number) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      // password は含めない
+    },
+  });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  return user;
 };
 
 export const updateUser = async (id: number, name: string) =>{
